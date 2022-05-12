@@ -3,9 +3,10 @@
 
 --1. How many actors are there with the last name ‘Wahlberg’?
 
-select count(last_name)
+select last_name, count(last_name)
 from actor
 where last_name = 'Wahlberg'
+group by last_name 
 
 --There are 2 Wahlberg last names in the actors list.
 
@@ -25,7 +26,7 @@ where amount between 3.99 and 5.99
 --3. What film does the store have the most of? (search in inventory)
 --NOTE: Per Alex, we are to disregard the store ID, so the answer is in regards to both stores combined, not necessarily both stores.
 
-select film.title
+select inventory.film_id, count(inventory.film_id) 
 from inventory
 join film
 on inventory.film_id = film.film_id
@@ -58,21 +59,21 @@ group by staff_id
 --------------------------------------------------
 --6. How many different district names are there?
 
-select count(district) 
+select count(distinct district) 
 from address
 
---There are 603 districts
+--There are 378 districts
 
 
 --------------------------------------------------------------------------------
 --7. What film has the most actors in it? (use film_actor table and get film_id)
 
-select film_id, max(film_id)
+select film_id, count(film_id)
 from film_actor
 group by film_id 
-order by max(film_id) desc
+order by count(film_id) desc
 
---Actor # 200 appears in 200 films.
+--Film 508 has 16 actors in it.
 
 
 ------------------------------------------------------------------------------------------------
@@ -80,22 +81,22 @@ order by max(film_id) desc
 
 select count(last_name)
 from customer
-where last_name like '%es'
+where store_id =1 and last_name like '%es'
 
---There are 21 customers with last names ending 'es'
+--There are 13 customers with last names ending 'es'
 
 
 -------------------------------------------------------------------------------------------------
 --9. How many payment amounts (4.99, 5.99, etc.) had a number of rentals above 250 for customers
 --with ids between 380 and 430? (use group by and having > 250)
 
-select customer_id ,amount, count(amount)
+select amount, count(amount)
 from payment
-where customer_id between 380 and 430 
-group by customer_id , amount 
-having count(amount) > 250
+where customer_id between 380 and 430
+group by amount 
+having count(amount) > 250;
 
---There are 0 amounts that were rented by customer_ids 380-430 over 250 times.
+--There are 3 amounts that were rented by customer_ids 380-430 over 250 times; 2.99,4.99,0.99.
 
 
 ----------------------------------------------------------------------------------------------------
@@ -108,9 +109,6 @@ group by rating
 order by count(rating) desc
 
 --There are 5 rating categories. PG-13 has the most movies, at 223.
-
-
-
 
 
 
